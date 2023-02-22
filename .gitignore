@@ -1,0 +1,6 @@
+.idea
+.vscode
+*.o
+*.so
+*.out
+client
