@@ -4,3 +4,6 @@
 *.so
 *.out
 client
+vgcore.*
+myftp
+test_ftp.sh
