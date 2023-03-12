@@ -25,6 +25,31 @@
     #define USERNAME "Anonymous"
     #define PASSWORD ""
 
+    #define USER "331 Please specify the password.\r\n"
+    #define PASS "230 Login successful.\r\n"
+    #define PASS_FAIL "530 Login or password incorrect.\r\n"
+    #define CWD "250 Directory successfully changed.\r\n"
+    #define CWD_FAIL "550 Failed to change directory.\r\n"
+    #define CDUP "200 Directory successfully changed.\r\n"
+    #define CDUP_FAIL "550 Failed to change directory.\r\n"
+    #define QUIT "221 Goodbye.\r\n"
+    #define DELE "250 Requested file action okay, completed.\r\n"
+    #define DELE_FAIL "550 Failed to delete file.\r\n"
+    #define PWD "257 \"/\" is current directory.\r\n"
+    #define PASV "227 Entering Passive Mode (127,0,0,1,0,20).\r\n"
+    #define PORT "200 PORT command successful.\r\n"
+    #define HELP "214-The following commands are recognized.\r\n"
+    #define HELP_2 "214-USER PASS CWD CDUP QUIT DELE PWD PASV PORT HELP NOOP RETR STOR\r\n"
+    #define HELP_3 "214 HELP NOOP RETR STOR\r\n"
+    #define NOOP "200 NOOP command successful.\r\n"
+    #define RETR "150 File status okay; about to open data connection.\r\n"
+    #define RETR_FAIL "550 Failed to open file.\r\n"
+    #define STOR "150 File status okay; about to open data connection.\r\n"
+    #define STOR_FAIL "550 Failed to open file.\r\n"
+    #define LIST "150 Here comes the directory listing.\r\n"
+    #define LIST_FAIL "550 Failed to open directory.\r\n"
+    #define NOT_LOGGED "530 Please login with USER and PASS.\r\n"
+
 typedef struct client_s client_t;
 
 typedef struct linked_list_s {

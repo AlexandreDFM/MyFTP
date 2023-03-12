@@ -24,7 +24,7 @@ void user(client_t *client)
         if (len_command == 1) client->username = strdup(tmp->argument);
         if (len_command >= 2) return not_logged(client);
     }
-    write(client->cl_fd, "331 Please specify the password.\r\n", 34);
+    write(client->cl_fd, USER, strlen(USER));
 }
 
 void pass(client_t *client)
@@ -42,10 +42,10 @@ void pass(client_t *client)
     }
     if (strcmp(client->username, USERNAME) == 0 &&
     strcmp(client->password, PASSWORD) == 0) {
-        write(client->cl_fd, "230 Login successful.\r\n", 23);
+        write(client->cl_fd, PASS, strlen(PASS));
         client->is_logged = true;
     } else {
-        write(client->cl_fd, "530 Login or password incorrect.\r\n", 34);
+        write(client->cl_fd, PASS_FAIL, strlen(PASS_FAIL));
     }
 }
 
@@ -53,21 +53,21 @@ void cwd(client_t *client)
 {
     if (!client->is_logged) return not_logged(client);
     if (client->buffer[0] == '\0')
-        write(client->cl_fd, "550 Failed to change directory.\r\n", 33);
+        write(client->cl_fd, CWD_FAIL, strlen(CWD_FAIL));
     else
-        write(client->cl_fd, "250 Directory successfully changed.\r\n", 37);
+        write(client->cl_fd, CWD, strlen(CWD));
 }
 
 void cdup(client_t *client)
 {
     if (!client->is_logged) return not_logged(client);
-    write(client->cl_fd, "200 Directory successfully changed.\r\n", 37);
+    write(client->cl_fd, CDUP, strlen(CDUP));
 }
 
 void quit(client_t *client)
 {
     if (!client->is_logged) return not_logged(client);
-    write(client->cl_fd, "221 Goodbye.\r\n", 14);
+    write(client->cl_fd, QUIT, strlen(QUIT));
     printf("Client disconnected.\n");
     destroy_client(client);
 }

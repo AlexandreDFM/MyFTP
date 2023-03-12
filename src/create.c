@@ -67,9 +67,9 @@ struct client_s create_client(int server_port, int client_socket)
     return client;
 }
 
-void fill_server(server_t *server, int port, char *path)
+void fill_server(server_t *server, int server_port, char *path)
 {
-    server->pwd = path; server->port = port; server->rselect = 0;
+    server->pwd = path; server->port = server_port; server->rselect = 0;
     server->socket_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (server->socket_fd < 0) {
         perror("socket_fd"); exit(84);
@@ -85,6 +85,6 @@ void fill_server(server_t *server, int port, char *path)
     FD_ZERO(&server->read_fds);
     FD_SET(server->socket_fd, &server->read_fds);
     server->timeout.tv_sec = 0; server->timeout.tv_usec = 0;
-    server->socket_address = create_socket_address(port);
+    server->socket_address = create_socket_address(server_port);
     server->socket_address_len = sizeof(server->socket_address);
 }

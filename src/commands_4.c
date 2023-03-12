@@ -9,5 +9,5 @@
 
 void not_logged(client_t *client)
 {
-    write(client->cl_fd, "530 Please login with USER and PASS.\r\n", 38);
+    write(client->cl_fd, NOT_LOGGED, strlen(NOT_LOGGED));
 }

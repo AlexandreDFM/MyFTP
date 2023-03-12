@@ -11,35 +11,32 @@ void dele(client_t *client)
 {
     if (!client->is_logged) return not_logged(client);
     if (client->buffer[0] == '\0')
-        write(client->cl_fd, "550 Failed to delete file.\r\n", 28);
+        write(client->cl_fd, DELE_FAIL, strlen(DELE_FAIL));
     else
-        write(client->cl_fd, "250 Delete operation successful.\r\n", 34);
+        write(client->cl_fd, DELE, strlen(DELE));
 }
 
 void pwd(client_t *client)
 {
     if (!client->is_logged) return not_logged(client);
-    write(client->cl_fd, "257 \"/\" is current directory.\r\n", 31);
+    write(client->cl_fd, PWD, strlen(PWD));
 }
 
 void pasv(client_t *client)
 {
     if (!client->is_logged) return not_logged(client);
-    write(client->cl_fd,
-    "227 Entering Passive Mode (127,0,0,1,0,0).\r\n", 42);
+    write(client->cl_fd, PASV, strlen(PASV));
 }
 
 void port(client_t *client)
 {
     if (!client->is_logged) return not_logged(client);
-    write(client->cl_fd, "200 PORT command successful.\r\n", 29);
+    write(client->cl_fd, PORT, strlen(PORT));
 }
 
 void help(client_t *client)
 {
-    write(client->cl_fd,
-    "214-The following commands are recognized.\r\n", 42);
-    write(client->cl_fd, "214-USER PASS CWD CDUP QUIT DELE PWD PASV"
-    "PORT HELP NOOP RETR STOR\r\n", 66);
-    write(client->cl_fd, "214 HELP NOOP RETR STOR\r\n", 24);
+    write(client->cl_fd, HELP, strlen(HELP));
+    write(client->cl_fd, HELP_2, strlen(HELP_2));
+    write(client->cl_fd, HELP_3, strlen(HELP_3));
 }
