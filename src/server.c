@@ -23,7 +23,7 @@ void check_fct(client_t *cl)
 void client_management(client_t c)
 {
     for (; c.is_active == true &&
-    read(c.cl_fd_socket, c.buffer, c.len_buffer) > 0;) {
+    getline(&c.buffer, &c.len_buffer, c.client_fd) > 0;) {
         c.rselect = select(c.cl_fd_socket + 1, &c.read_fds, NULL, NULL,
         &c.timeout);
         check_fct(&c);
