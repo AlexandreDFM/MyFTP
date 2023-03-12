@@ -7,6 +7,22 @@
 
 #include "./include/myftp.h"
 
+server_t *get_server(void)
+{
+    static server_t server;
+    return (&server);
+}
+
+void sig_handler(int signum)
+{
+    (void)signum;
+    server_t *server = get_server();
+    printf("\n");
+    destroy_server(server);
+    printf("Server closed.\n");
+    exit(0);
+}
+
 void print_usage(void)
 {
     printf("USAGE: ./myftp port path\n");
@@ -26,6 +42,7 @@ int main(int argc, char **argv)
         printf("Port must be between 1024 and 65535\n");
         return 84;
     }
+    signal(SIGINT, sig_handler);
     server(atoi(argv[1]), argv[2]);
     return 0;
 }

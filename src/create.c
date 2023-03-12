@@ -56,38 +56,35 @@ struct client_s create_client(int server_port, int client_socket)
     client.rselect = 0;
     client.len_buffer = 2048;
     client.buffer = malloc(sizeof(char) * client.len_buffer);
-    client.cl_fd_socket = client_socket;
+    client.cl_fd = client_socket;
     FD_ZERO(&client.read_fds); FD_SET(client_socket, &client.read_fds);
     client.timeout.tv_sec = 0; client.timeout.tv_usec = 0;
-    client.client_fd = fdopen(client_socket, "r+");
     client.socket_address = create_socket_address(server_port);
     client.socket_address_len = sizeof(client.socket_address);
-    char *fct_names[] = {"USER", "PASS", "CWD", "CDUP", "QUIT", "DELE", "PWD",
-    "PASV", "PORT", "HELP", "NOOP", "RETR", "STOR", "LIST", NULL};
-    void *fct_pointers[] = {&user, &pass, &cwd, &cdup, &quit, &dele, &pwd,
-    &pasv, &port, &help, &noop, &retr, &stor, &list, NULL};
-    client.commands = fill_map(fct_names, fct_pointers);
     client.commands_lines = NULL;
     client.is_active = true; client.is_logged = false;
     client.username = NULL; client.password = strdup("");
     return client;
 }
 
-struct server_s create_server(int port, char *path)
+void fill_server(server_t *server, int port, char *path)
 {
-    server_t server;
-    server.pwd = path;
-    server.port = port;
-    server.rselect = 0;
-    server.socket_fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (server.socket_fd < 0) {
+    server->pwd = path; server->port = port; server->rselect = 0;
+    server->socket_fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (server->socket_fd < 0) {
         perror("socket_fd"); exit(84);
     }
-    FD_ZERO(&server.read_fds);
-    FD_SET(server.socket_fd, &server.read_fds);
-    server.timeout.tv_sec = 0;
-    server.timeout.tv_usec = 0;
-    server.socket_address = create_socket_address(port);
-    server.socket_address_len = sizeof(server.socket_address);
-    return server;
+    char *fct_names[] = {"USER", "PASS", "CWD", "CDUP", "QUIT", "DELE", "PWD",
+    "PASV", "PORT", "HELP", "NOOP", "RETR", "STOR", "LIST", NULL};
+    void *fct_pointers[] = {&user, &pass, &cwd, &cdup, &quit, &dele, &pwd,
+    &pasv, &port, &help, &noop, &retr, &stor, &list, NULL};
+    server->commands = fill_map(fct_names, fct_pointers);
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+        server->clients[i].cl_fd = NO_SOCKET;
+    }
+    FD_ZERO(&server->read_fds);
+    FD_SET(server->socket_fd, &server->read_fds);
+    server->timeout.tv_sec = 0; server->timeout.tv_usec = 0;
+    server->socket_address = create_socket_address(port);
+    server->socket_address_len = sizeof(server->socket_address);
 }

@@ -24,6 +24,8 @@ SRC			= 	main.c														   \
 				src/my_read.c												   \
 				src/my_write.c												   \
 				src/my_frees.c												   \
+				src/client.c												   \
+				src/selects.c												   \
 
 OBJ			=	$(SRC:.c=.o)
 

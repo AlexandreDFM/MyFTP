@@ -11,14 +11,14 @@
 void noop(client_t *client)
 {
     if (!client->is_logged) return not_logged(client);
-    fprintf(client->client_fd, "200 NOOP command successful.\r\n");
+    write(client->cl_fd, "200 NOOP command successful.\r\n", 29);
 }
 
 void retr(client_t *client)
 {
     if (!client->is_logged) return not_logged(client);
     if (client->buffer[0] == '\0')
-        fprintf(client->client_fd, "550 Failed to open file.\r\n");
+        write(client->cl_fd, "550 Failed to open file.\r\n", 26);
     else
         return;
 }
@@ -27,7 +27,7 @@ void stor(client_t *client)
 {
     if (!client->is_logged) return not_logged(client);
     if (client->buffer[0] == '\0')
-        fprintf(client->client_fd, "550 Failed to open file.\r\n");
+        write(client->cl_fd, "550 Failed to open file.\r\n", 26);
     else
         return;
 }
@@ -36,7 +36,7 @@ void list(client_t *client)
 {
     if (!client->is_logged) return not_logged(client);
     if (client->buffer[0] == '\0')
-        fprintf(client->client_fd, "550 Failed to open file.\r\n");
+        write(client->cl_fd, "550 Failed to open file.\r\n", 26);
     else
         return;
 }

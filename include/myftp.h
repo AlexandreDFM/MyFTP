@@ -17,9 +17,11 @@
     #include <sys/select.h>
     #include <sys/socket.h>
     #include <arpa/inet.h>
+    #include <signal.h>
 
-    #define MAX_CLIENTS
+    #define MAX_CLIENTS 20
     #define FILE_SIZE 1024
+    #define NO_SOCKET -1
     #define USERNAME "Anonymous"
     #define PASSWORD ""
 
@@ -42,20 +44,23 @@ typedef struct commands_lines_s {
 } commands_lines_t;
 
 typedef struct client_s {
-    int pid;
+
     int rselect;
     char *buffer;
+
     char *username;
     char *password;
+
     bool is_active;
     bool is_logged;
+
     fd_set read_fds;
-    FILE *client_fd;
     size_t len_buffer;
-    int cl_fd_socket;
+
+    int cl_fd;
     int socket_address_len;
     struct timeval timeout;
-    struct commands_s *commands;
+
     struct sockaddr_in socket_address;
     struct commands_lines_s *commands_lines;
 } client_t;
@@ -69,17 +74,28 @@ typedef struct server_s {
     int socket_address_len;
     struct timeval timeout;
     struct sockaddr_in socket_address;
+
+    struct commands_s *commands;
+
+    struct client_s clients[MAX_CLIENTS];
 } server_t;
 
 char *my_read(char *path);
+server_t *get_server(void);
 void free_map(commands_t *map);
 void server(int port, char *path);
+void sig_handler(int signum);
 char *my_read_connected(int socket_fd);
 void write_file(int socket_fd, char *filename);
+void server_select(server_t *s);
+void client_select(client_t *c);
+void check_fct(server_t *server, client_t *cl);
+void client_management(server_t *server, client_t *client);
+void handle_new_client(server_t *s);
 
 //////////////////////////CREATE/////////////////////////////
 struct sockaddr_in create_socket_address(int port);
-struct server_s create_server(int port, char *path);
+void fill_server(server_t *server, int port, char *path);
 struct commands_lines_s *create_commands_lines(char *argument);
 struct client_s create_client(int server_port, int client_socket);
 
