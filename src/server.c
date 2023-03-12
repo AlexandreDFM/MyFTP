@@ -23,7 +23,7 @@ void check_fct(client_t *cl)
 void client_management(client_t c)
 {
     for (; c.is_active == true &&
-    getline(&c.buffer, &c.len_buffer, c.client_fd) > 0;) {
+    read(c.cl_fd_socket, c.buffer, c.len_buffer) > 0;) {
         c.rselect = select(c.cl_fd_socket + 1, &c.read_fds, NULL, NULL,
         &c.timeout);
         check_fct(&c);
@@ -42,17 +42,17 @@ void server_loop(server_t *s)
             &s->read_fds)); s->timeout.tv_sec = 2; s->timeout.tv_usec = 0;
             FD_ZERO(&s->read_fds); FD_SET(s->socket_fd, &s->read_fds);
             continue;
-        } int client_socket = accept(s->socket_fd,
+        }
+        int client_socket = accept(s->socket_fd,
         (struct sockaddr *)&s->socket_address,
         (socklen_t *)&s->socket_address_len);
         if (client_socket < 0) {
             perror("accept"); exit(84);
-        } client_t client = create_client(s->port, client_socket);
-        printf("Connection from %s:%d\n",
-        inet_ntoa(client.socket_address.sin_addr),
-        ntohs(client.socket_address.sin_port));
-        fprintf(client.client_fd, "220 Welcome to my_ftp\r\n");
-        client_management(client);
+        } client_t c = create_client(s->port, client_socket);
+        printf("Connection from %s:%d\n", inet_ntoa(c.socket_address.sin_addr),
+        ntohs(c.socket_address.sin_port));
+        fprintf(c.client_fd, "220 Welcome to my_ftp\r\n");
+        client_management(c);
     }
 }
 
@@ -66,5 +66,6 @@ void server(int port, char *path)
     if (listen(server.socket_fd, 20) < 0) {
         perror("Error too much connexions"); exit(84);
     }
-    server_loop(&server);
+    server_loop(&server); printf("Server closed.\n");
+    destroy_server(&server);
 }

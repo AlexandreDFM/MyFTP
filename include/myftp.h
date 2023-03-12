@@ -21,7 +21,7 @@
     #define MAX_CLIENTS
     #define FILE_SIZE 1024
     #define USERNAME "Anonymous"
-    #define PASSWORD "\n"
+    #define PASSWORD ""
 
 typedef struct client_s client_t;
 
@@ -45,6 +45,8 @@ typedef struct client_s {
     int pid;
     int rselect;
     char *buffer;
+    char *username;
+    char *password;
     bool is_active;
     bool is_logged;
     fd_set read_fds;
@@ -86,7 +88,7 @@ void free_commands_lines(commands_lines_t *commands_lines);
 
 //////////////////////////DESTROY////////////////////////////
 void destroy_client(client_t *client);
-
+void destroy_server(server_t *server);
 
 //////////////////////////LOOPS//////////////////////////////
 void server_loop(server_t *server);
@@ -112,6 +114,9 @@ void noop(client_t *client);
 void retr(client_t *client);
 void stor(client_t *client);
 void list(client_t *client);
+
+/////////////////COMMANDS_4/////////////////
+void not_logged(client_t *client);
 
 //////////////////////////UTILS/////////////////////////////
 

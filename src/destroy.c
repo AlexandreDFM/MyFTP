@@ -14,3 +14,8 @@ void destroy_client(client_t *client)
     free_map(client->commands);
     close(client->cl_fd_socket);
 }
+
+void destroy_server(server_t *server)
+{
+    close(server->socket_fd);
+}

@@ -6,3 +6,8 @@
 */
 
 #include "../include/myftp.h"
+
+void not_logged(client_t *client)
+{
+    fprintf(client->client_fd, "530 Please login with USER and PASS.\r\n");
+}

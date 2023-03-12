@@ -11,10 +11,10 @@ struct commands_lines_s *create_commands_lines(char *argument)
 {
     struct commands_lines_s *commands_lines =
     malloc(sizeof(struct commands_lines_s));
-    commands_lines->argument = strtok(argument, " \r");
+    commands_lines->argument = strtok(argument, " \r\n");
     commands_lines->next = NULL;
-    for (char *token = strtok(NULL, " \r"); token != NULL;
-    token = strtok(NULL, " \r")) {
+    for (char *token = strtok(NULL, " \r\n"); token != NULL;
+    token = strtok(NULL, " \r\n")) {
         struct commands_lines_s *new = malloc(sizeof(struct commands_lines_s));
         new->argument = token;
         new->next = NULL;
@@ -69,6 +69,7 @@ struct client_s create_client(int server_port, int client_socket)
     client.commands = fill_map(fct_names, fct_pointers);
     client.commands_lines = NULL;
     client.is_active = true; client.is_logged = false;
+    client.username = NULL; client.password = strdup("");
     return client;
 }
 
