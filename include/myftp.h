@@ -35,12 +35,14 @@
     #define QUIT "221 Goodbye.\r\n"
     #define DELE "250 Requested file action okay, completed.\r\n"
     #define DELE_FAIL "550 Failed to delete file.\r\n"
-    #define PWD "257 \"/\" is current directory.\r\n"
+    #define PWD_CODE "257 "
+    #define PWD_MESSAGE " is current directory.\r\n"
     #define PASV "227 Entering Passive Mode (127,0,0,1,0,20).\r\n"
     #define PORT "200 PORT command successful.\r\n"
-    #define HELP "214-The following commands are recognized.\r\n"
-    #define HELP_2 "214-USER PASS CWD CDUP QUIT DELE PWD PASV PORT HELP NOOP RETR STOR\r\n"
-    #define HELP_3 "214 HELP NOOP RETR STOR\r\n"
+    #define HELP_1 "214-The following commands are recognized.\r\n"
+    #define HELP_2 "214-USER PASS CWD CDUP QUIT DELE PWD"
+    #define HELP_3 " PASV PORT HELP NOOP RETR STOR\r\n"
+    #define HELP_4 "214 HELP NOOP RETR STOR\r\n"
     #define NOOP "200 NOOP command successful.\r\n"
     #define RETR "150 File status okay; about to open data connection.\r\n"
     #define RETR_FAIL "550 Failed to open file.\r\n"
@@ -69,23 +71,18 @@ typedef struct commands_lines_s {
 } commands_lines_t;
 
 typedef struct client_s {
-
     int rselect;
+    char *pwd;
     char *buffer;
-
     char *username;
     char *password;
-
     bool is_active;
     bool is_logged;
-
     fd_set read_fds;
     size_t len_buffer;
-
     int cl_fd;
     int socket_address_len;
     struct timeval timeout;
-
     struct sockaddr_in socket_address;
     struct commands_lines_s *commands_lines;
 } client_t;
@@ -122,7 +119,7 @@ void handle_new_client(server_t *s);
 struct sockaddr_in create_socket_address(int port);
 void fill_server(server_t *server, int port, char *path);
 struct commands_lines_s *create_commands_lines(char *argument);
-struct client_s create_client(int server_port, int client_socket);
+struct client_s create_client(int server_port, int client_socket, char *path);
 
 //////////////////////////FREES//////////////////////////////
 void free_commands_lines(commands_lines_t *commands_lines);

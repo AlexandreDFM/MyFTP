@@ -52,16 +52,26 @@ void pass(client_t *client)
 void cwd(client_t *client)
 {
     if (!client->is_logged) return not_logged(client);
-    if (client->buffer[0] == '\0')
-        write(client->cl_fd, CWD_FAIL, strlen(CWD_FAIL));
-    else
+    int len_command = 0;
+    for (commands_lines_t *tmp = client->commands_lines; tmp;
+    tmp = tmp->next, len_command++);
+    if (len_command < 2) {
+        write(client->cl_fd, CWD_FAIL, strlen(CWD_FAIL)); return;
+    } else {
         write(client->cl_fd, CWD, strlen(CWD));
+    }
+    chdir(client->commands_lines->next->argument);
+    if (client->pwd != NULL) free(client->pwd);
+    client->pwd = strdup(client->commands_lines->next->argument);
 }
 
 void cdup(client_t *client)
 {
     if (!client->is_logged) return not_logged(client);
     write(client->cl_fd, CDUP, strlen(CDUP));
+    chdir("..");
+    if (client->pwd != NULL) free(client->pwd);
+    client->pwd = strdup(getcwd(NULL, 0));
 }
 
 void quit(client_t *client)

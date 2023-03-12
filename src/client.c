@@ -19,7 +19,8 @@ void handle_new_client(server_t *s)
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (s->clients[i].cl_fd == NO_SOCKET) {
             actual_client = i;
-            s->clients[i] = create_client(s->port, client_socket); break;
+            s->clients[i] = create_client(s->port, client_socket, s->pwd);
+            break;
         }
     }
     printf("Connection from %s:%d\n",

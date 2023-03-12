@@ -50,9 +50,10 @@ struct commands_s *fill_map(char **fct_names, void **fct_pointers)
     return head;
 }
 
-struct client_s create_client(int server_port, int client_socket)
+struct client_s create_client(int server_port, int client_socket, char *path)
 {
     client_t client;
+    client.pwd = strdup(path);
     client.rselect = 0;
     client.len_buffer = 2048;
     client.buffer = malloc(sizeof(char) * client.len_buffer);
@@ -69,7 +70,9 @@ struct client_s create_client(int server_port, int client_socket)
 
 void fill_server(server_t *server, int server_port, char *path)
 {
-    server->pwd = path; server->port = server_port; server->rselect = 0;
+    server->pwd = strdup(path);
+    chdir(server->pwd);
+    server->port = server_port; server->rselect = 0;
     server->socket_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (server->socket_fd < 0) {
         perror("socket_fd"); exit(84);
