@@ -12,4 +12,5 @@ void destroy_client(client_t *client)
     fclose(client->client_fd);
     free(client->buffer);
     free_map(client->commands);
+    close(client->cl_fd_socket);
 }
