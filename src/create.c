@@ -54,6 +54,7 @@ struct client_s create_client(int server_port, int client_socket, char *path)
 {
     client_t client;
     client.pwd = strdup(path);
+    chdir(client.pwd);
     client.rselect = 0;
     client.len_buffer = 2048;
     client.buffer = malloc(sizeof(char) * client.len_buffer);
@@ -71,7 +72,6 @@ struct client_s create_client(int server_port, int client_socket, char *path)
 void fill_server(server_t *server, int server_port, char *path)
 {
     server->pwd = strdup(path);
-    chdir(server->pwd);
     server->port = server_port; server->rselect = 0;
     server->socket_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (server->socket_fd < 0) {
