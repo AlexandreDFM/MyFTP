@@ -2,10 +2,10 @@
 ** EPITECH PROJECT, 2023
 ** B-NWP-400-NCE-4-1-myftp-alexandre-kevin.de-freitas-martins
 ** File description:
-** commands
+** not_logged.c
 */
 
-#include "../include/myftp.h"
+#include "../../include/myftp.h"
 
 void not_logged(client_t *client)
 {
