@@ -14,7 +14,7 @@ void pass(client_t *client)
     }
     int len_command = 0;
     for (commands_lines_t *tmp = client->commands_lines; tmp;
-         tmp = tmp->next, len_command++) {
+    tmp = tmp->next, len_command++) {
         if (len_command == 1) {
             free(client->password); client->password = strdup(tmp->argument);
         }

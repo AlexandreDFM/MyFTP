@@ -45,8 +45,18 @@ void check_fct(server_t *server, client_t *cl)
 
 void client_management(server_t *server, client_t *client)
 {
-    memset(client->buffer, 0, 1024);
-    if (read(client->cl_fd, client->buffer, 1024) > 0) {
-        check_fct(server, client);
+    static int clear_buffer = 0;
+    char *buffer = malloc(sizeof(char) * 1024); memset(buffer, 0, 1024);
+    if (clear_buffer == 0) {
+        memset(client->buffer, 0, 1024);
+        clear_buffer = 1;
     }
+    if (read(client->cl_fd, buffer, 1024) > 0) {
+        strcat(client->buffer, buffer);
+        if (strstr(client->buffer, "\n") == NULL)  {
+            free(buffer); return;
+        }
+        check_fct(server, client); clear_buffer = 0;
+    }
+    free(buffer);
 }

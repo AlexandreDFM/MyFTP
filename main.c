@@ -42,6 +42,10 @@ int main(int argc, char **argv)
         printf("Port must be between 1024 and 65535\n");
         return 84;
     }
+    if (chdir(argv[2]) == -1) {
+        printf("Invalid path\n");
+        return 84;
+    }
     signal(SIGINT, sig_handler);
     server(atoi(argv[1]), argv[2]);
     return 0;
